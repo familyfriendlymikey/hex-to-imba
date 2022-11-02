@@ -1,0 +1,15 @@
+{
+  "name": "hex-to-imba",
+  "version": "1.0.0",
+  "description": "Hex code to imba color.",
+  "author": "Mikey Oz",
+  "homepage": "https://github.com/familyfriendlymikey/hex-to-imba#readme",
+  "main": "main.js",
+  "bin": {
+    "hti": "main.js"
+  },
+  "scripts": {
+    "build": "imbac --bin bun main.imba && imbac colors.imba",
+    "prepublishOnly": "npm run build"
+  }
+}

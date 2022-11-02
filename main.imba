@@ -67,7 +67,13 @@ def delta
 
 def getClosest hex
 	let closest = 100000
+	let c
 	for own color, hsl of colors
-		p delta(hslToLab(hsl), hexToLab(hex))
+		let d = delta(hslToLab(hsl), hexToLab(hex))
+		if d < closest
+			closest = d
+			c = color
+	c
 
-getClosest '61a6fa'
+process.exit! unless process.argv[2]
+p getClosest process.argv[2]
