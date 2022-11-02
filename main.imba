@@ -1,6 +1,8 @@
 const p = console.log
 
-def rgbToLab(rgb)
+let colors = require './colors.js'
+
+def rgbToLab rgb
 	let r = rgb[0] / 255
 	let g = rgb[1] / 255
 	let b = rgb[2] / 255
@@ -22,8 +24,8 @@ def rgbToLab(rgb)
 
 	[(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
 
-def hexToRgb
-	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec($1)
+def hexToRgb hex
+	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
 	return unless result
 	[
 		parseInt result[1], 16
@@ -31,7 +33,22 @@ def hexToRgb
 		parseInt result[3], 16
 	]
 
-def labDeltaE
+def hexToLab hex
+	rgbToLab(hexToRgb(hex))
+
+def hslToRgb hsl
+	let h = hsl[0]
+	let s = hsl[1] / 100
+	let l = hsl[2] / 100
+	const k = do(n) (n + h / 30) % 12
+	const a = s * Math.min(l, 1 - l)
+	const f = do(n) l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))
+	[255 * f(0), 255 * f(8), 255 * f(4)]
+
+def hslToLab hsl
+	rgbToLab(hslToRgb(hsl))
+
+def delta
 	let deltaL = $1[0] - $2[0]
 	let deltaA = $1[1] - $2[1]
 	let deltaB = $1[2] - $2[2]
@@ -48,12 +65,9 @@ def labDeltaE
 	let i = deltaLKlsl * deltaLKlsl + deltaCkcsc * deltaCkcsc + deltaHkhsh * deltaHkhsh
 	i < 0 ? 0 : Math.sqrt(i)
 
-def hexDeltaE
-	labDeltaE
-		rgbToLab(hexToRgb($1))
-		rgbToLab(hexToRgb($2))
+def getClosest hex
+	let closest = 100000
+	for own color, hsl of colors
+		p delta(hslToLab(hsl), hexToLab(hex))
 
-p hexDeltaE('61a6fa','61a6fb')
-p hexDeltaE('61a6fa','ffffff')
-p hexDeltaE('61a6fa','000000')
-p hexDeltaE('ffffff','000000')
+getClosest '61a6fa'
