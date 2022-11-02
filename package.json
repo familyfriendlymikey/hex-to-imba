@@ -5,6 +5,7 @@
   "author": "Mikey Oz",
   "homepage": "https://github.com/familyfriendlymikey/hex-to-imba#readme",
   "main": "main.js",
+  "files": ["main.js", "colors.js"],
   "bin": {
     "hti": "main.js"
   },
